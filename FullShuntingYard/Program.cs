@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -159,7 +160,7 @@ namespace FullShuntingYard
 
         static bool IsUnary(string op)
         {
-            string[] unaryOps = { "!", "sin", "cos", "tan", "cot", "sec", "cosec" };
+            string[] unaryOps = { "!", "sin", "cos", "tan", "cot", "sec", "cosec", "arcsin", "arccos", "arctan", "sinh", "cosh", "tanh" };
             return unaryOps.Contains(op);
         }
 
@@ -281,6 +282,7 @@ namespace FullShuntingYard
 
         static double NumericalUnaryOperation(double a, string op)
         {
+            double result;
             string[] trigonometricOperations = { "sin", "cos", "tan", "sec", "cosec", "cot" };
             string[] hyperbolicTrigonometricOperations = { "sinh", "cosh", "tanh" };
             string[] inverseTrigonometricOperations = { "arcsin", "arccos", "arctan" };
@@ -296,32 +298,48 @@ namespace FullShuntingYard
             switch (op)
             {
                 case "sin":
-                    return Math.Sin(a);
+                    result = Math.Sin(a);
+                    break;
                 case "cos":
-                    return Math.Cos(a);
+                    result = Math.Cos(a);
+                    break;
                 case "tan":
-                    return Math.Tan(a);
+                    result = Math.Tan(a);
+                    break;
                 case "sec":
-                    return 1 / Math.Cos(a);
+                    result = 1 / Math.Cos(a);
+                    break;
                 case "cosec":
-                    return 1 / Math.Sin(a);
+                    result = 1 / Math.Sin(a);
+                    break;
                 case "cot":
-                    return 1 / Math.Tan(a);
+                    result = 1 / Math.Tan(a);
+                    break;
                 case "arcsin":
-                    return Math.Asin(a);
+                    result = Math.Asin(a);
+                    break;
                 case "arccos":
-                    return Math.Acos(a);
+                    result = Math.Acos(a);
+                    break;
                 case "arctan":
-                    return Math.Atan(a);
+                    result = Math.Atan(a);
+                    break;
                 case "sinh":
                     return Math.Sinh(a);
                 case "cosh":
-                    return Math.Cosh(a);
+                    result = Math.Cosh(a);
+                    break;
                 case "tanh":
-                    return Math.Tanh(a);
+                    result = Math.Tanh(a);
+                    break;
                 default:
                     throw new Exception($"ERROR: Invalid operation");
             }
+            if (inverseTrigonometricOperations.Contains(op))
+            {
+                a = a / Math.PI * 180;
+            }
+            return a;
         }
 
         static bool ComparisonOperation(double a, double b, string op)
